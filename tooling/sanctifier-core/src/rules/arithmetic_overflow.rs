@@ -186,7 +186,9 @@ impl<'ast> Visit<'ast> for ArithVisitor {
 fn classify_math_method(method: &str) -> Option<String> {
     match method {
         "mul_div" => Some("Use '.checked_mul_div()' to handle potential overflow".to_string()),
-        "div_ceil" => Some("Consider '.checked_div()' if boundary verification is required".to_string()),
+        "div_ceil" => {
+            Some("Consider '.checked_div()' if boundary verification is required".to_string())
+        }
         "fixed_point_mul" => Some("Use '.checked_fixed_point_mul()' for safety".to_string()),
         "fixed_point_div" => Some("Use '.checked_fixed_point_div()' for safety".to_string()),
         _ => None,
@@ -245,7 +247,9 @@ mod tests {
         "#;
         let violations = rule.check(source);
         assert!(violations.iter().any(|v| v.message.contains("mul_div")));
-        assert!(violations.iter().any(|v| v.message.contains("fixed_point_mul")));
+        assert!(violations
+            .iter()
+            .any(|v| v.message.contains("fixed_point_mul")));
     }
 
     #[test]
@@ -259,7 +263,9 @@ mod tests {
         "#;
         let violations = rule.check(source);
         assert!(violations.iter().any(|v| v.message.contains("mul_div")));
-        assert!(violations.iter().any(|v| v.message.contains("fixed_point_div")));
+        assert!(violations
+            .iter()
+            .any(|v| v.message.contains("fixed_point_div")));
     }
 
     #[test]
